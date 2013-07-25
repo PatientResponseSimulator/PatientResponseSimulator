@@ -1,0 +1,16 @@
+C:\Programming\PatientResponseSimulator\PatientResponseSimulator\bin\Release\PatientResponseSimulator.exe
+C:\Programming\PatientResponseSimulator\PatientResponseSimulator\bin\Release\PatientResponseSimulator.pdb
+C:\Programming\PatientResponseSimulator\PatientResponseSimulator\bin\Release\StyleCop.CSharp.dll
+C:\Programming\PatientResponseSimulator\PatientResponseSimulator\bin\Release\StyleCop.CSharp.Rules.dll
+C:\Programming\PatientResponseSimulator\PatientResponseSimulator\bin\Release\StyleCop.dll
+C:\Programming\PatientResponseSimulator\PatientResponseSimulator\bin\Release\StyleCop.VSPackage.dll
+C:\Programming\PatientResponseSimulator\PatientResponseSimulator\obj\Release\ResolveAssemblyReference.cache
+C:\Programming\PatientResponseSimulator\PatientResponseSimulator\obj\Release\Window1.baml
+C:\Programming\PatientResponseSimulator\PatientResponseSimulator\obj\Release\Window1.g.cs
+C:\Programming\PatientResponseSimulator\PatientResponseSimulator\obj\Release\App.g.cs
+C:\Programming\PatientResponseSimulator\PatientResponseSimulator\obj\Release\PatientResponseSimulator_MarkupCompile.cache
+C:\Programming\PatientResponseSimulator\PatientResponseSimulator\obj\Release\PatientResponseSimulator.g.resources
+C:\Programming\PatientResponseSimulator\PatientResponseSimulator\obj\Release\PatientResponseSimulator.Properties.Resources.resources
+C:\Programming\PatientResponseSimulator\PatientResponseSimulator\obj\Release\PatientResponseSimulator.csproj.GenerateResource.Cache
+C:\Programming\PatientResponseSimulator\PatientResponseSimulator\obj\Release\PatientResponseSimulator.exe
+C:\Programming\PatientResponseSimulator\PatientResponseSimulator\obj\Release\PatientResponseSimulator.pdb

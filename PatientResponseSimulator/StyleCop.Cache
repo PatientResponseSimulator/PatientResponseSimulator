@@ -1,0 +1,75 @@
+<stylecopresultscache>
+  <version>11</version>
+  <sourcecode name="Resources.Designer.cs" parser="StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>07/10/2013 09:54:25</timestamp>
+      <milliseconds>602</milliseconds>
+    </settings>
+    <timestamp>07/25/2013 13:00:30</timestamp>
+    <milliseconds>26</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="App.xaml.cs" parser="StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>07/10/2013 09:54:25</timestamp>
+      <milliseconds>602</milliseconds>
+    </settings>
+    <timestamp>07/25/2013 13:00:30</timestamp>
+    <milliseconds>93</milliseconds>
+    <violations>
+      <violation namespace="StyleCop.CSharp.DocumentationRules" rule="FileMustHaveHeader" ruleCheckId="SA1633">
+        <context>The file has no header, the header Xml is invalid, or the header is not located at the top of the file.</context>
+        <line>1</line>
+        <warning>False</warning>
+      </violation>
+    </violations>
+  </sourcecode>
+  <sourcecode name="Settings.Designer.cs" parser="StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>07/10/2013 09:54:25</timestamp>
+      <milliseconds>602</milliseconds>
+    </settings>
+    <timestamp>07/25/2013 13:00:30</timestamp>
+    <milliseconds>59</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="App.g.cs" parser="StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>07/10/2013 09:54:25</timestamp>
+      <milliseconds>602</milliseconds>
+    </settings>
+    <timestamp>07/25/2013 13:17:23</timestamp>
+    <milliseconds>284</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="Window1.g.cs" parser="StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>07/10/2013 09:54:25</timestamp>
+      <milliseconds>602</milliseconds>
+    </settings>
+    <timestamp>07/25/2013 13:17:23</timestamp>
+    <milliseconds>336</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="AssemblyInfo.cs" parser="StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>07/10/2013 09:54:25</timestamp>
+      <milliseconds>602</milliseconds>
+    </settings>
+    <timestamp>07/25/2013 13:23:25</timestamp>
+    <milliseconds>458</milliseconds>
+    <violations />
+  </sourcecode>
+  <project key="258717626">
+    <configuration>TRACE</configuration>
+  </project>
+  <sourcecode name="Window1.xaml.cs" parser="StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>07/10/2013 09:54:25</timestamp>
+      <milliseconds>602</milliseconds>
+    </settings>
+    <timestamp>07/25/2013 13:24:41</timestamp>
+    <milliseconds>260</milliseconds>
+    <violations />
+  </sourcecode>
+</stylecopresultscache>

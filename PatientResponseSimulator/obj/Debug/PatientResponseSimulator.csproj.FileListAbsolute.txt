@@ -1,0 +1,12 @@
+C:\Users\baya\AppData\Local\Temporary Projects\PatientResponseSimulator\bin\Debug\PatientResponseSimulator.exe
+C:\Users\baya\AppData\Local\Temporary Projects\PatientResponseSimulator\bin\Debug\PatientResponseSimulator.pdb
+C:\Users\baya\AppData\Local\Temporary Projects\PatientResponseSimulator\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\baya\AppData\Local\Temporary Projects\PatientResponseSimulator\obj\Debug\Window1.baml
+C:\Users\baya\AppData\Local\Temporary Projects\PatientResponseSimulator\obj\Debug\Window1.g.cs
+C:\Users\baya\AppData\Local\Temporary Projects\PatientResponseSimulator\obj\Debug\App.g.cs
+C:\Users\baya\AppData\Local\Temporary Projects\PatientResponseSimulator\obj\Debug\PatientResponseSimulator_MarkupCompile.cache
+C:\Users\baya\AppData\Local\Temporary Projects\PatientResponseSimulator\obj\Debug\PatientResponseSimulator.g.resources
+C:\Users\baya\AppData\Local\Temporary Projects\PatientResponseSimulator\obj\Debug\PatientResponseSimulator.Properties.Resources.resources
+C:\Users\baya\AppData\Local\Temporary Projects\PatientResponseSimulator\obj\Debug\PatientResponseSimulator.csproj.GenerateResource.Cache
+C:\Users\baya\AppData\Local\Temporary Projects\PatientResponseSimulator\obj\Debug\PatientResponseSimulator.exe
+C:\Users\baya\AppData\Local\Temporary Projects\PatientResponseSimulator\obj\Debug\PatientResponseSimulator.pdb
