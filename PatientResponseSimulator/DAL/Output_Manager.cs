@@ -13,10 +13,15 @@
 //------------------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
+using System.IO;
+using System.Security;
+using PatientResponseSimulator.BLL;
+using System.Windows;
 
-namespace PatientResponseSimulator.BLL
+namespace PatientResponseSimulator.DAL
 {
     /// <summary>
     /// Definition of the Output_Manager class.
@@ -92,11 +97,48 @@ namespace PatientResponseSimulator.BLL
         /// <param name="fileName">
         /// Name of the file
         /// </param>
-        /// <param name="SM">
+        /// <param name="subjectsToWrite">
         /// Subject_Manager instance.
         /// </param>
-        public void OutputToFile(string directoryPath, string fileName, Subject subjectToWrite)
+        public void OutputToFile(string directoryPath, string fileName, List<Subject> subjectsToWrite)
         {
+            try
+            {
+                using (StreamWriter sw = new StreamWriter(directoryPath
+                    + fileName + ".txt"))
+                {
+                    foreach (Subject s in subjectsToWrite)
+                    {
+                    }
+                }
+            }
+
+            catch (UnauthorizedAccessException e)
+            {
+                MessageBox.Show("Exception: Access to the directory denied. "
+                    + "Choose a different directory, or check the folder permissions.");
+            }
+            catch (ArgumentException e)
+            {
+                MessageBox.Show("Exception: Invalid file name. ");
+            }
+            catch (PathTooLongException e)
+            {
+                MessageBox.Show("Exception: Choose a shorter directory path. "
+                    + "Path is longer than system allowed maximum length.");
+            }
+            catch (IOException e)
+            {
+                MessageBox.Show("Exception: IO Error, check file system and permissions");
+            }
+            catch (SecurityException e)
+            {
+                MessageBox.Show("Exception: Security exception, check security settings.");
+            }
+            catch (Exception e)
+            {
+                throw e; //
+            }
 
         }
 

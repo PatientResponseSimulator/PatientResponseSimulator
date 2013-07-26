@@ -1,28 +1,32 @@
 ﻿//------------------------------------------------------------------------------------------
-// <copyright file=" GroupedSubject.cs" company="TESSELLA">
-//     Copyright © SET COPYRIGHT IN THE SNIPPET FILE. All rights reserved.
+// <copyright file="EndPoint.cs" company="Tessella">
+//     Copyright © Tessella 2013. All rights reserved.
 // </copyright>
-// <project>Tessella/NPD/PatientResponseSimulator</project>
+// <project>Tessella C# training exercise, Assay Scheduler</project>
 // <summary></summary>
 // <svn>
 //  <lastChanged>$Date$</lastChanged>
-//  <by>Tiziano Diamanti</by>
+//  <by>BAYA</by>
 //  <version>$Revision$</version>
 //  <source>$HeadURL$</source>
 // </svn>
 //------------------------------------------------------------------------------------------
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace PatientResponseSimulator
+namespace PatientResponseSimulator.BLL
 {
-    class Subject
+    class EndPoint
     {
-        public
-        int SubjectID;
-        int DoseID;
-        List<Response> SubjectResponses;
+        public string Name;
+
+        public EndpointType Type;
+
+        public List<int> VisitOccurances;
+
+        public int EndpointID;
     }
 }

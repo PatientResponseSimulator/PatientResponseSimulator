@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------------------
-// <copyright file=" EndPoint.cs" company="TESSELLA">
+// <copyright file="VisitEndpoint.cs" company="TESSELLA">
 //     Copyright © SET COPYRIGHT IN THE SNIPPET FILE. All rights reserved.
 // </copyright>
 // <project>Tessella/NPD/PatientResposeSimulator</project>
@@ -16,8 +16,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace PatientResponseSimulator
+namespace PatientResponseSimulator.BLL
 {
+    /// <summary>
+    /// Continous is a floating point value, can have real values
+    /// Dichotomous is only 0 or 1 (represents boolean)
+    /// TimeToEvent is meant to measure weeks, decimal represents days divided by 7
+    /// </summary>
     public enum EndpointType
     {
         Continous,
@@ -25,24 +30,11 @@ namespace PatientResponseSimulator
         TimeToEvent
     };
 
-    class Endpoint
+    public class VisitEndpoint
     {
-        #region Properties 
-        #endregion
-
-        #region Constructor
-        Endpoint()
-        {
-            Value = 0.0f;
-        }
-        #endregion
-
-
-        #region Methods
-        #endregion
-
-        double Value;
-        EndpointType Type;
-        string Name;
+        public uint VisiID;
+        public double Value;
+        public EndpointType Type;
+        public int EnpointID;
     }
 }

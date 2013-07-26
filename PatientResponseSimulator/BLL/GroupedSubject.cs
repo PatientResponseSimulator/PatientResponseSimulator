@@ -16,12 +16,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace PatientResponseSimulator
+namespace PatientResponseSimulator.BLL
 {
-    class Response
+    class GroupedSubject : Subject
     {
-        public
-        int VisiID;
-        List<Endpoint> Endpoints;
+        protected uint groupID;
+
+        public uint GroupID
+        {
+            get
+            {
+                return groupID;
+            }
+        }
+
+        public GroupedSubject(uint subjectid, uint doseid, uint groupid) : base (subjectid, doseid)
+        {
+            groupID = groupid;
+        }
     }
 }

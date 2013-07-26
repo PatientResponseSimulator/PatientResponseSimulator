@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace PatientResponseSimulator
+namespace PatientResponseSimulator.BLL
 {
     /// <summary>
     /// Definition of the Statistics_Manager class.

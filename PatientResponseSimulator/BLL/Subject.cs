@@ -16,11 +16,40 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace PatientResponseSimulator
+namespace PatientResponseSimulator.BLL
 {
-    class GroupedSubject : Subject
+    public class Subject
     {
-        public 
-            int GroupID;
+        protected uint subjectID;
+        protected uint doseID;
+
+
+        public uint SubjectID
+        {
+            get
+            {
+                return subjectID;
+            }
+        }
+
+
+        public uint DoseID
+        {
+            get
+            {
+                return doseID;
+            }
+        }
+        public List<VisitEndpoint> SubjectResponses;
+
+        public Subject(uint subjectid, uint doseid)
+        {
+            subjectID = subjectid;
+            doseID = doseid;
+        }
+
+        protected Subject()
+        {
+        }
     }
 }
