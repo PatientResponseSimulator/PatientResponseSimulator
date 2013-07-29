@@ -24,6 +24,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using PatientResponseSimulator.BLL;
+using System.IO;
+
 
 namespace PatientResponseSimulator
 {
@@ -37,6 +40,11 @@ namespace PatientResponseSimulator
         /// </summary>
         public Window1()
         {
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
