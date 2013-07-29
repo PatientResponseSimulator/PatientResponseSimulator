@@ -16,5 +16,7 @@ namespace PatientResponseSimulator.BLL
         int GetNumSubjects();
 
         int AddEndpoint(string Name, EndpointType Type, List<int> VisitOccurances);
+
+        void ClearPopulation();
     }
 }

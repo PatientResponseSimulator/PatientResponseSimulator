@@ -25,9 +25,11 @@ namespace PatientResponseSimulator.BLL
 
         private static Subject_Manager instance;
 
-        private List<Subject> subjectList;
+        private static List<Subject> subjectList;
 
-        private List<EndPoint> Endpoints;
+        private static List<EndPoint> endpoints;
+
+        private static uint populationSize;
 
         #endregion
 
@@ -35,7 +37,11 @@ namespace PatientResponseSimulator.BLL
         
         private Subject_Manager()
         {
+            populationSize = 0;
 
+            subjectList = new List<Subject>();
+
+            endpoints = new List<EndPoint>();
         }
 
         #endregion
@@ -85,6 +91,31 @@ namespace PatientResponseSimulator.BLL
         public int AddEndpoint(string Name, EndpointType Type, List<int> VisitOccurances)
         {
             return 5;
+        }
+
+        /// <summary>
+        /// Creates a dose population. 
+        /// </summary>
+        /// <param name="populationSize">
+        /// Size of the population.
+        /// </param>
+        public void CreateDosePopulation(uint dosePopulationSize, uint doseID)
+        {
+            for (int i = 0; i < populationSize; i++)
+            {
+                subjectList.Add(new Subject(populationSize, doseID));
+            }
+        }
+
+        /// <summary>
+        /// Clears the population (subjectList)
+        /// </summary>
+        public void ClearPopulation()
+        {
+            subjectList.Clear();
+            endpoints.Clear();
+
+            populationSize = 0;
         }
 
         #endregion

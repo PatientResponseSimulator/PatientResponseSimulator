@@ -45,18 +45,28 @@ namespace PatientResponseSimulator.BLL
         /// </summary>
         private List<bool> historyDependencies;
 
+        /// <summary>
+        /// This integer sotres the size of the sample we are 
+        /// generating statistics for.
+        /// </summary>
+        private int sampleSize;
+
         #endregion
 
         #region Constructors
 
         /// <summary>
-        /// Prevents a default instance of the Statistics_Manager class from being created.
+        /// Prevents a default instance of the Statistics_Manager 
+        /// class from being created external to the class. Also
+        /// initializes default values.
         /// </summary>
         private Statistics_Manager()
         {
             endpointStatisticTypes = new List<StatisticType>();
 
             historyDependencies = new List<bool>();
+
+            sampleSize = 0;
         }
 
         #endregion
@@ -75,14 +85,9 @@ namespace PatientResponseSimulator.BLL
             Normal,
 
             /// <summary>
-            /// Exponential Rise type
+            /// Exponential distribution
             /// </summary>
-            ExponentialRise,
-
-            /// <summary>
-            /// Exponential Decay type
-            /// </summary>
-            ExponentialDecay
+            Exponential,
         }
 
         #endregion
@@ -102,6 +107,14 @@ namespace PatientResponseSimulator.BLL
                 }
 
                 return instance;
+            }
+        }
+
+        public int SampleSize
+        {
+            get
+            {
+                return sampleSize;
             }
         }
 
@@ -126,6 +139,24 @@ namespace PatientResponseSimulator.BLL
         }
 
         /// <summary>
+        /// This method sets the internal field used for 
+        /// storing the size of the population we are
+        /// generating samples for.
+        /// </summary>
+        /// <param name="desiredSampleSize">
+        /// Desired sample/population size.
+        /// </param>
+        /// <returns>
+        /// Confirms desired sample/population size.
+        /// </returns>
+        public int SetSampleSize(int desiredSampleSize)
+        {
+            sampleSize = desiredSampleSize;
+
+            return sampleSize;
+        }
+
+        /// <summary>
         /// Box-Mueller random number generator that yields a specified 
         /// mean and standard deviation. The Box-Mueller scheme implemented
         /// is the polar method.
@@ -142,7 +173,7 @@ namespace PatientResponseSimulator.BLL
         /// <returns>
         /// Returns the desired normal distribution.
         /// </returns>
-        private List<double> NormalDistribution(double mean, double standardDeviation, int distributionSize)
+        public List<double> NormalDistribution(double mean, double standardDeviation, int distributionSize)
         {
             // Seed for random number generation
             Random r = new Random();
@@ -151,7 +182,23 @@ namespace PatientResponseSimulator.BLL
 
             double u, v, s;
 
-            for (int i = 0; i < distributionSize; i++)
+            for (int i = 0; i < distributionSize/2; i++)
+            {
+                do
+                {
+                    u = (2.0 * r.NextDouble()) - 1.0;
+                    v = (2.0 * r.NextDouble()) - 1.0;
+                    s = (u * u) + (v * v);
+                }
+                while (s >= 1.0);
+
+                normalDistribution.Add(((u * Math.Sqrt(-2.0 * Math.Log(s) / s)) * standardDeviation) + mean);
+                normalDistribution.Add(((v * Math.Sqrt(-2.0 * Math.Log(s) / s)) * standardDeviation) + mean);
+            }
+
+            // If the value of the distribution size is odd, we need to add
+            // one last point to the list.
+            if (distributionSize % 2 != 0)
             {
                 do
                 {
@@ -165,6 +212,40 @@ namespace PatientResponseSimulator.BLL
             }
 
             return normalDistribution;
+        }
+
+        /// <summary>
+        /// Box-Mueller random number generator that yields a specified 
+        /// mean and standard deviation. The Box-Mueller scheme implemented
+        /// is the polar method.
+        /// </summary>
+        /// <param name="mean">
+        /// Mean of the exponential distribution. It is also the same 
+        /// value as the standard deviation. The decay rate parameter
+        /// lambda is equal to 1/mean. 
+        /// </param>
+        /// <param name="distributionSize">
+        /// The size of the distribution created.
+        /// </param>
+        /// <returns>
+        /// Returns the desired normal distribution.
+        /// </returns>
+        public List<double> ExponentialDistribution(double mean, int distributionSize)
+        {
+            // Seed for random number generation
+            Random r = new Random();
+
+            List<double> exponentialDistribution = new List<double>();
+
+            // Rate parameter
+            double lambda = 1 / mean;
+
+            for (int i = 0; i < distributionSize; i++)
+            {
+                exponentialDistribution.Add(Math.Log(1-r.NextDouble())/(-1*lambda));
+            }
+
+            return exponentialDistribution;
         }
 
         #endregion

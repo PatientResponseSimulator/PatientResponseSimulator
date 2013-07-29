@@ -20,10 +20,15 @@ namespace PatientResponseSimulator.BLL
 {
     public class Subject
     {
+        #region fields
+
         protected uint subjectID;
         protected uint doseID;
 
+        #endregion
 
+
+        #region Properties
         public uint SubjectID
         {
             get
@@ -42,14 +47,20 @@ namespace PatientResponseSimulator.BLL
         }
         public List<VisitEndpoint> SubjectResponses;
 
+        #endregion
+
+        #region Constructors
         public Subject(uint subjectid, uint doseid)
         {
             subjectID = subjectid;
             doseID = doseid;
+            SubjectResponses = new List<VisitEndpoint>();
         }
 
         protected Subject()
         {
         }
+
+        #endregion
     }
 }
