@@ -18,6 +18,27 @@ using System.Text;
 
 namespace PatientResponseSimulator.BLL
 {
+    #region Enums
+
+    /// <summary>
+    /// This enum lists the different types of statistical
+    /// simulations that can be run.
+    /// </summary>
+    public enum StatisticType
+    {
+        /// <summary>
+        /// Normal Distribution type
+        /// </summary>
+        Normal,
+
+        /// <summary>
+        /// Exponential distribution
+        /// </summary>
+        Exponential,
+    }
+
+    #endregion
+
     /// <summary>
     /// Definition of the Statistics_Manager class.
     /// </summary>
@@ -49,7 +70,7 @@ namespace PatientResponseSimulator.BLL
         /// This integer sotres the size of the sample we are 
         /// generating statistics for.
         /// </summary>
-        private int sampleSize;
+        private uint sampleSize;
 
         #endregion
 
@@ -67,27 +88,6 @@ namespace PatientResponseSimulator.BLL
             historyDependencies = new List<bool>();
 
             sampleSize = 0;
-        }
-
-        #endregion
-
-        #region Enums
-
-        /// <summary>
-        /// This enum lists the different types of statistical
-        /// simulations that can be run.
-        /// </summary>
-        public enum StatisticType
-        {
-            /// <summary>
-            /// Normal Distribution type
-            /// </summary>
-            Normal,
-
-            /// <summary>
-            /// Exponential distribution
-            /// </summary>
-            Exponential,
         }
 
         #endregion
@@ -110,7 +110,7 @@ namespace PatientResponseSimulator.BLL
             }
         }
 
-        public int SampleSize
+        public uint SampleSize
         {
             get
             {
@@ -149,7 +149,7 @@ namespace PatientResponseSimulator.BLL
         /// <returns>
         /// Confirms desired sample/population size.
         /// </returns>
-        public int SetSampleSize(int desiredSampleSize)
+        public uint SetSampleSize(uint desiredSampleSize)
         {
             sampleSize = desiredSampleSize;
 
@@ -173,7 +173,7 @@ namespace PatientResponseSimulator.BLL
         /// <returns>
         /// Returns the desired normal distribution.
         /// </returns>
-        public List<double> NormalDistribution(double mean, double standardDeviation, int distributionSize)
+        public List<double> NormalDistribution(double mean, double standardDeviation)
         {
             // Seed for random number generation
             Random r = new Random();
@@ -182,7 +182,7 @@ namespace PatientResponseSimulator.BLL
 
             double u, v, s;
 
-            for (int i = 0; i < distributionSize/2; i++)
+            for (int i = 0; i < sampleSize/2; i++)
             {
                 do
                 {
@@ -192,13 +192,13 @@ namespace PatientResponseSimulator.BLL
                 }
                 while (s >= 1.0);
 
-                normalDistribution.Add(((u * Math.Sqrt(-2.0 * Math.Log(s) / s)) * standardDeviation) + mean);
-                normalDistribution.Add(((v * Math.Sqrt(-2.0 * Math.Log(s) / s)) * standardDeviation) + mean);
+                normalDistribution.Add(u);
+                normalDistribution.Add(v);
             }
 
             // If the value of the distribution size is odd, we need to add
             // one last point to the list.
-            if (distributionSize % 2 != 0)
+            if (sampleSize % 2 != 0)
             {
                 do
                 {
@@ -208,7 +208,21 @@ namespace PatientResponseSimulator.BLL
                 }
                 while (s >= 1.0);
 
-                normalDistribution.Add(((u * Math.Sqrt(-2.0 * Math.Log(s) / s)) * standardDeviation) + mean);
+                normalDistribution.Add(u);
+            }
+
+            // Calculate the mean and standard deviation of the current
+            // distribution (should be close to 0 and 1, respectively).
+            // Use this information, along with the desired results, 
+            // to reshape the distribution.
+            double calculatedMean = normalDistribution.Average();
+            double calculatedStdDev = normalDistribution.Sum(d => Math.Pow(d - calculatedMean, 2));
+            calculatedStdDev = Math.Sqrt((calculatedStdDev) / (normalDistribution.Count));
+
+            // Reshaping
+            for (int i = 0; i < normalDistribution.Count; i++)
+            {
+                normalDistribution[i] = mean + (standardDeviation / calculatedStdDev) * (normalDistribution[i] - calculatedMean);
             }
 
             return normalDistribution;
@@ -230,7 +244,7 @@ namespace PatientResponseSimulator.BLL
         /// <returns>
         /// Returns the desired normal distribution.
         /// </returns>
-        public List<double> ExponentialDistribution(double mean, int distributionSize)
+        public List<double> ExponentialDistribution(double mean)
         {
             // Seed for random number generation
             Random r = new Random();
@@ -240,7 +254,7 @@ namespace PatientResponseSimulator.BLL
             // Rate parameter
             double lambda = 1 / mean;
 
-            for (int i = 0; i < distributionSize; i++)
+            for (int i = 0; i < sampleSize; i++)
             {
                 exponentialDistribution.Add(Math.Log(1-r.NextDouble())/(-1*lambda));
             }

@@ -11,8 +11,11 @@
 //  <source>$HeadURL$</source>
 // </svn>
 //------------------------------------------------------------------------------------------
+using PatientResponseSimulator.BLL;
+using PatientResponseSimulator.Modules;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -24,9 +27,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using PatientResponseSimulator.BLL;
-using System.IO;
-
 
 namespace PatientResponseSimulator
 {
@@ -44,6 +44,18 @@ namespace PatientResponseSimulator
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
+            DoseFindingContinuous dfc = new DoseFindingContinuous();
+
+            dfc.AddDose(1500, 120, 90, 15);
+            dfc.AddDose(2500, 120, 50, 1);
+            dfc.AddDose(2000, 120, 150, 30);
+            dfc.AddDose(3000, 120, 120, 15);
+
+            dfc.SetOutputDirectory("c:\\Tessella\\");
+
+            dfc.SetNumberVisits(10);
+
+            dfc.RunSinglePopulation("TestPopulation2.txt");
 
         }
     }

@@ -37,7 +37,6 @@ namespace PatientResponseSimulator.BLL
             }
         }
 
-
         public uint DoseID
         {
             get

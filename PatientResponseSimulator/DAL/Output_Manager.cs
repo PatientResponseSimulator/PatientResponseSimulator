@@ -34,6 +34,7 @@ namespace PatientResponseSimulator.DAL
         /// Singleton instance of the Output_Manager class.
         /// </summary>
         private static Output_Manager instance;
+        private const string separator = ",";
 
         /// <summary>
         /// String used for formatting the output
@@ -98,18 +99,44 @@ namespace PatientResponseSimulator.DAL
         /// Name of the file
         /// </param>
         /// <param name="subjectsToWrite">
-        /// Subject_Manager instance.
+        /// Subjects List
         /// </param>
         public void OutputToFile(string directoryPath, string fileName, List<Subject> subjectsToWrite)
         {
+            string baseLine, lineToWrite;
             try
             {
                 using (StreamWriter sw = new StreamWriter(directoryPath
-                    + fileName + ".txt"))
+                    + fileName))
                 {
                     foreach (Subject s in subjectsToWrite)
                     {
+                        /// SubjectID and DoseID do not change per line
+                        baseLine = s.SubjectID.ToString() + separator + s.DoseID.ToString();
+                        foreach (VisitEndpoint sr in s.SubjectResponses)
+                        {
+                            /// Add VisitID
+                            lineToWrite = baseLine + separator + sr.VisitID.ToString();
+                            /// Add Value, depending on the Value Type a safe type onversion might be required
+                            switch (sr.Type)
+                            {
+                                case EndpointType.Continous:
+                                case EndpointType.TimeToEvent:
+                                    lineToWrite += separator + sr.Value.ToString();
+                                    break;
+                                case EndpointType.Dichotomous:
+                                    int IntValue = (int)sr.Value;
+                                    lineToWrite += separator + IntValue.ToString();
+                                    break;
+                                default:
+                                    lineToWrite += separator + sr.Value.ToString();
+                                    break;
+                            }
+                            sw.WriteLine(lineToWrite);
+                        }
                     }
+                    sw.Flush();
+                    sw.Dispose();
                 }
             }
 

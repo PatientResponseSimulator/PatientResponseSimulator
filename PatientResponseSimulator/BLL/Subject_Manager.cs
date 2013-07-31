@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using PatientResponseSimulator.DAL;
 
 namespace PatientResponseSimulator.BLL
 {
@@ -23,13 +24,30 @@ namespace PatientResponseSimulator.BLL
 
         #region Fields
 
+        /// <summary>
+        /// field to store the manager instance
+        /// </summary>
         private static Subject_Manager instance;
 
+        /// <summary>
+        /// list of subjects
+        /// </summary>
         private static List<Subject> subjectList;
 
+        /// <summary>
+        /// list of endpoints that will have to be simulated.
+        /// </summary>
         private static List<EndPoint> endpoints;
 
-        private static uint populationSize;
+        /// <summary>
+        /// the total population size
+        /// </summary>
+        private static uint totalPopulationSize;
+
+        /// <summary>
+        ///  field to keep track of what visit number we are on
+        /// </summary>
+        private static uint visits;
 
         #endregion
 
@@ -37,7 +55,7 @@ namespace PatientResponseSimulator.BLL
         
         private Subject_Manager()
         {
-            populationSize = 0;
+            totalPopulationSize = 0;
 
             subjectList = new List<Subject>();
 
@@ -99,23 +117,76 @@ namespace PatientResponseSimulator.BLL
         /// <param name="populationSize">
         /// Size of the population.
         /// </param>
-        public void CreateDosePopulation(uint dosePopulationSize, uint doseID)
+        public void CreateDose(uint dosePopulationSize, uint doseID)
         {
-            for (int i = 0; i < populationSize; i++)
+            for (uint i = 0; i < dosePopulationSize; i++)
             {
-                subjectList.Add(new Subject(populationSize, doseID));
+                totalPopulationSize += 1;
+                subjectList.Add(new Subject(totalPopulationSize, doseID));
             }
         }
 
         /// <summary>
         /// Clears the population (subjectList)
         /// </summary>
-        public void ClearPopulation()
+        public void ClearPopulations()
         {
             subjectList.Clear();
             endpoints.Clear();
 
-            populationSize = 0;
+            totalPopulationSize = 0;
+            visits = 0;
+        }
+
+        public void SimulateVisit(uint doseID, uint samples, double mean, double stdDev, StatisticType type, EndPoint endpoint)
+        {
+            Statistics_Manager StatisticsManager = Statistics_Manager.Instance;
+
+            StatisticsManager.SetSampleSize(samples);
+
+            // Unnecessary line of code, for now.
+            // StatisticsManager.AddEndPoint(type, false);
+
+            List<double> data = new List<double>();
+
+            switch (type)
+            {
+                case StatisticType.Normal:
+                    data = StatisticsManager.NormalDistribution(mean, stdDev);
+                    break;
+                case StatisticType.Exponential:
+                    data = StatisticsManager.ExponentialDistribution(mean);
+                    break;
+            }
+
+            int i = 0;
+            foreach (Subject s in subjectList.FindAll(o => o.DoseID == doseID))
+            {
+                s.SubjectResponses.Add(new VisitEndpoint(visits, data[i], endpoint.Type, endpoint.EndpointID));
+                i++;
+            }
+        }
+
+        public uint NewVisit()
+        {
+            visits += 1;
+            return visits;
+        }
+
+        /// <summary>
+        /// Calls the output manager to print the subject list.
+        /// </summary>
+        /// <param name="outputFileName">
+        /// string containing the name of the file, with extension
+        /// </param>
+        /// <param name="outputDirectory">
+        /// output directory string
+        /// </param>
+        public void WriteResults(string outputDirectory, string outputFileName)
+        {
+            Output_Manager OM = Output_Manager.Instance;
+
+            OM.OutputToFile(outputDirectory, outputFileName, subjectList);
         }
 
         #endregion

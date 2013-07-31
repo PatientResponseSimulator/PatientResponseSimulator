@@ -32,9 +32,17 @@ namespace PatientResponseSimulator.BLL
 
     public class VisitEndpoint
     {
-        public uint VisiID;
+        public uint VisitID;
         public double Value;
         public EndpointType Type;
-        public int EnpointID;
+        public int EndpointID;
+
+        public VisitEndpoint(uint visitID, double value, EndpointType type, int endpointID)
+        {
+            VisitID = visitID;
+            Value = value;
+            Type = type;
+            EndpointID = endpointID;
+        }
     }
 }
