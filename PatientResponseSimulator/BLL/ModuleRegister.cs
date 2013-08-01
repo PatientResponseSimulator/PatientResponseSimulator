@@ -18,6 +18,12 @@ using System.Text;
 
 namespace PatientResponseSimulator.BLL
 {
+    public struct ModuleData
+    {
+        public string moduleDescription;
+        public string moduleName;
+        public Type ModuleClass;
+    }
     /// <summary>
     /// class ModuleRegister is a static class that holds the Module names and descriptions to prompt the user for selection
     /// </summary>
@@ -25,31 +31,34 @@ namespace PatientResponseSimulator.BLL
     {
         #region Fields
         
-        private static List<string> moduleDescriptions;
-        private static List<string> moduleNames;
+        private static List<ModuleData> modules;
 
         #endregion
         #region Methods
-
-        public static void InsertModule(string ModuleName, string ModuleDescription)
+        /// <summary>
+        /// Inserts a new module in the register
+        /// </summary>
+        /// <param name="dt"> Module data to be inserted </param>
+        public static void InsertModule(ModuleData dt)
         {
-            moduleNames.Add(ModuleName);
-            moduleDescriptions.Add(ModuleDescription);
+            modules.Add(dt);
         }
-
+        /// <summary>
+        /// Get the number of modules in the register
+        /// </summary>
+        /// <returns></returns>
         public static int GetNumModules()
         {
-            return moduleDescriptions.Count();
+            return modules.Count();
         }
-
-        public static string GetModulesName(int moduleIdx)
+        /// <summary>
+        /// Gets the Module name 
+        /// </summary>
+        /// <param name="moduleIdx"> module index </param>
+        /// <returns></returns>
+        public static ModuleData GetModule(int moduleIdx)
         {
-            return moduleNames[moduleIdx];
-        }
-
-        public static string GetModulesDescription(int moduleIdx)
-        {
-            return moduleDescriptions[moduleIdx];
+            return modules[moduleIdx];
         }
 
         #endregion

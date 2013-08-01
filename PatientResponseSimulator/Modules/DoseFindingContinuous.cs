@@ -131,6 +131,11 @@ namespace PatientResponseSimulator.Modules
 
             }
 
+            if (!outputFileName.Contains("."))
+            {
+                outputFileName += ".dat";
+            }
+
             // Write the output file
             SubjectManager.WriteResults(outputDirectory, outputFileName);
         }

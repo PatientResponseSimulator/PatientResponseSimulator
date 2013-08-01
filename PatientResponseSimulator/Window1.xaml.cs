@@ -44,6 +44,31 @@ namespace PatientResponseSimulator
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
+            Statistics_Manager SM = Statistics_Manager.Instance;
+
+            List<double> values = new List<double>();
+
+            SM.SetSampleSize(10000);
+            values = SM.InverseGammaDistribution(1, 1);
+
+            try
+            {
+
+                using (StreamWriter sw = new StreamWriter("C:\\Tessella\\Values.txt"))
+                {
+                    foreach(double d in values)
+                    {
+                        sw.WriteLine(d.ToString());
+                    }
+                    sw.Close();
+                }
+            }
+            catch(Exception excep)
+            {
+                MessageBox.Show("Error! \n" + excep.ToString());
+            }
+
+            /*
             DoseFindingContinuous dfc = new DoseFindingContinuous();
 
             dfc.AddDose(1500, 120, 90, 15);
@@ -56,7 +81,7 @@ namespace PatientResponseSimulator
             dfc.SetNumberVisits(10);
 
             dfc.RunSinglePopulation("TestPopulation2.txt");
-
+            */
         }
     }
 }

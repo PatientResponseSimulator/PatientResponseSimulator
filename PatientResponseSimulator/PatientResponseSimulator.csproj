@@ -121,7 +121,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BLL\IModule.cs" />
     <Compile Include="BLL\ModuleRegister.cs" />
     <Compile Include="Modules\DoseFindingContinuous.cs" />
     <Compile Include="Window1.xaml.cs">

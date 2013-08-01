@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace PatientResponseSimulator.BLL
 {
@@ -35,6 +36,16 @@ namespace PatientResponseSimulator.BLL
         /// Exponential distribution
         /// </summary>
         Exponential,
+    }
+
+    #endregion
+
+    #region Structs
+
+    public struct CDF
+    {
+        public List<double> Q;
+        public List<double> x;
     }
 
     #endregion
@@ -260,6 +271,138 @@ namespace PatientResponseSimulator.BLL
             }
 
             return exponentialDistribution;
+        }
+
+        /// <summary>
+        /// Incomplete lower gamma function, power series estimation
+        /// </summary>
+        /// <param name="s">
+        /// gamma function input
+        /// </param>
+        /// <param name="x">
+        /// interface value between lower and upper Gamma function
+        /// </param>
+        /// <returns>
+        /// Returns incomplete_lower_gamma(s,x)
+        /// </returns>
+        public double IncompleteLowerGamma(double s, double x)
+        {
+            Chart myStatFormula = new Chart();
+
+            double intermediate = Math.Pow(x, s);
+
+            intermediate = intermediate * myStatFormula.DataManipulator.Statistics.GammaFunction(s);
+            intermediate = intermediate * Math.Exp(-1 * x);
+
+            double sum = 0;
+            int loops = 200;
+
+            for (int k = 0; k < loops; k++)
+            {
+                sum = sum + Math.Pow(x, k) / myStatFormula.DataManipulator.Statistics.GammaFunction(s + k + 1);   
+            }
+
+            return intermediate*sum;
+        }
+
+        /// <summary>
+        /// Incomplete upper gamma function
+        /// </summary>
+        /// <param name="s">
+        /// gamma function input
+        /// </param>
+        /// <param name="x">
+        /// interface value between lower and upper Gamma function
+        /// </param>
+        /// <returns>
+        /// Returns incomplete_upper_gamma(s,x)
+        /// </returns>
+        public double IncompleteUpperGamma(double s, double x)
+        {
+            Chart myStatFormula = new Chart();
+
+            return (myStatFormula.DataManipulator.Statistics.GammaFunction(s) - IncompleteLowerGamma(s, x));
+        }
+
+        /// <summary>
+        /// Inverse Gamma distribution
+        /// </summary>
+        /// <param name="alpha">
+        /// Distribution shape factor
+        /// </param>
+        /// <param name="beta">
+        /// Distribution scale parameter
+        /// </param>
+        /// <returns>
+        /// Returns a distribution of points that fall along 
+        /// an inverse-gamma distribution.
+        /// </returns>
+        public List<double> InverseGammaDistribution(double mean, double weight)
+        {
+            double beta = weight;
+
+            double alpha = weight / mean + 1;
+
+            List<double> igDistribution = new List<double>();
+
+            // Calculate the CDF of the inverse Gamma function.
+            CDF igCDF = InverseGammaCDF(alpha, beta);
+
+            // Seed for random number generation
+            Random r = new Random();
+
+            double u;
+            int j;
+
+            for (int i = 0; i < sampleSize; i++)
+            {
+                // Random number generation
+                u = r.NextDouble();
+
+                // find the index where the random number fits between
+                // the discrete CDF values;
+                j = igCDF.Q.FindIndex(o => (double)o > u)-1;
+
+                // Interpolate between the x values of the CDF, and add to the distribution;
+                igDistribution.Add((igCDF.x[j + 1] - igCDF.x[j]) / (igCDF.Q[j + 1] - igCDF.Q[j]) * (u - igCDF.Q[j]) + igCDF.x[j]);
+            }
+
+            return igDistribution;
+        }
+
+        /// <summary>
+        /// Inverse Gamma Function CDF
+        /// </summary>
+        /// <param name="alpha">
+        /// Distribution shape factor
+        /// </param>
+        /// <param name="beta">
+        /// Distribution scale parameter
+        /// </param>
+        /// <returns>
+        /// Returns the CDF associated with the Gamma function
+        /// defined by parameters alpha and beta.
+        /// </returns>
+        public CDF InverseGammaCDF(double alpha, double beta)
+        {
+            CDF igCDF = new CDF();
+            igCDF.Q = new List<double>();
+            igCDF.x = new List<double>();
+
+            Chart myStatFormula = new Chart();
+
+            double Q = 0;
+            double x = 0.01;
+            while (Q < .9999)
+            {
+                Q = IncompleteUpperGamma(alpha, beta / x) / myStatFormula.DataManipulator.Statistics.GammaFunction(alpha);
+                igCDF.Q.Add(Q);
+                igCDF.x.Add(x);
+
+                x += 0.005;
+            }
+
+            return igCDF;
         }
 
         #endregion
