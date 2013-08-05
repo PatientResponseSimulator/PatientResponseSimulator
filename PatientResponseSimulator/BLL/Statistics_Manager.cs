@@ -270,9 +270,17 @@ namespace PatientResponseSimulator.BLL
                 exponentialDistribution.Add(Math.Log(1-r.NextDouble())/(-1*lambda));
             }
 
+            // Correct the final mean value to match the desired mean.
+            double distMean = exponentialDistribution.Average();
+            for (int i = 0; i < exponentialDistribution.Count(); i++)
+            {
+                exponentialDistribution[i] = exponentialDistribution[i] - distMean + mean;
+            }
+
             return exponentialDistribution;
         }
 
+        /*
         /// <summary>
         /// Incomplete lower gamma function, power series estimation
         /// </summary>
@@ -403,6 +411,103 @@ namespace PatientResponseSimulator.BLL
             }
 
             return igCDF;
+        }
+        */
+
+
+        /// <summary>
+        /// Gamma Distribution function
+        /// </summary>
+        /// <param name="mean">
+        /// Final mean value of the randomly generated points
+        /// </param>
+        /// <param name="shapeFactor">
+        /// Shape factor. Must be greater than 1. If it is less than 1,
+        /// it will be set to 1.
+        /// </param>
+        /// <returns>
+        /// Returns a list of randomly distributed numbers that follow
+        /// a Gamma distribution. 
+        /// </returns>
+        public List<double> GammaDistribution(double alpha, double beta)
+        {
+            // Code derived from John D. Cook's open source 
+            // random number generation code.
+            // Implementation based on "A Simple Method for Generating Gamma Variables"
+            // by George Marsaglia and Wai Wan Tsang.  ACM Transactions on Mathematical Software
+            // Vol 26, No 3, September 2000, pages 363-372.
+
+            double mean = alpha/beta;
+
+            // Random number seed
+            Random r = new Random();
+
+            List<double> normalDist = NormalDistribution(0,1);
+
+            List<double> gammaDist = new List<double>();
+
+            double d, c, x, xsquared, v, u, u1, u2, theta;
+
+            if (alpha >= 1.0)
+            {
+                d = alpha - 1.0/3.0;
+                c = 1.0/Math.Sqrt(9.0*d);
+                while (gammaDist.Count < sampleSize)
+                {
+                    do
+                    {
+                        // Use Box-Muller polar for a normal distributed
+                        // number x
+                        u1 = r.NextDouble();
+                        u2 = r.NextDouble();
+                        theta = 2.0*Math.PI*u2;
+                        x =  Math.Sqrt( -2.0*Math.Log(u1) )*Math.Sin(theta);
+                        v = 1.0 + c*x;
+                    }
+                    while (v <= 0.0);
+                    v = v*v*v;
+                    u = r.NextDouble();
+                    xsquared = x*x;
+                    if (u < 1.0 -.0331*xsquared*xsquared || Math.Log(u) < 0.5*xsquared + d*(1.0 - v + Math.Log(v)))
+                        gammaDist.Add(beta*d*v);
+                }
+
+                // Correct mean
+                double gammaMean = gammaDist.Average();
+                for (int i = 0; i < gammaDist.Count; i++)
+                {
+                    gammaDist[i] = gammaDist[i] - gammaMean + mean;
+                }
+                return gammaDist;
+            }
+            else
+            {
+                return GammaDistribution(mean, 1);
+            }
+        }
+
+        public List<double> InverseGammaDistribution(double mean, double shapeFactor)
+        {
+            double alpha = shapeFactor;
+            double beta = mean*(alpha-1);
+
+            List<double> inverseGammaDist = new List<double>();
+
+            inverseGammaDist = GammaDistribution(alpha, beta);
+
+            for (int i = 0; i < inverseGammaDist.Count; i++)
+            {
+                inverseGammaDist[i] = 1/inverseGammaDist[i];
+            }
+
+            double igammaMean = inverseGammaDist.Average();
+
+            for (int i = 0; i < inverseGammaDist.Count; i++)
+            {
+                inverseGammaDist[i] = inverseGammaDist[i] - igammaMean + mean;
+            }
+
+            return inverseGammaDist;
         }
 
         #endregion

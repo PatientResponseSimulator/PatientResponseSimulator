@@ -16,13 +16,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace PatientResponseSimulator.BLL
+// This class implements a static register for all the available modules
+
+namespace PatientResponseSimulator.Modules
 {
-    public struct ModuleData
+    /// <summary>
+    /// this could have been a struct but added the override to ToString, so became a class
+    /// it's used to collect data about Modules
+    /// </summary>
+    public class ModuleData
     {
+        #region Fields
         public string moduleDescription;
         public string moduleName;
         public Type ModuleClass;
+        #endregion
+
+        public override string ToString()
+        {
+            return moduleName;
+
+        }
     }
     /// <summary>
     /// class ModuleRegister is a static class that holds the Module names and descriptions to prompt the user for selection
@@ -33,6 +47,14 @@ namespace PatientResponseSimulator.BLL
         
         private static List<ModuleData> modules;
 
+        #endregion
+
+        #region Constructors
+        static ModuleRegister()
+        {
+            modules = new List<ModuleData>();
+            DoseFindingContinuous.SelfRegister();
+        }
         #endregion
         #region Methods
         /// <summary>

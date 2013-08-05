@@ -8,15 +8,27 @@ using System.Windows.Forms.DataVisualization.Charting;
 namespace PatientResponseSimulator.Modules
 {
     struct dose
-        {
-            public uint doseID;
-            public uint populationSize;
-            public double initialMean;
-            public double finalMean;
-            public double stdDev;
-        }
+    {
+        public uint doseID;
+        public uint populationSize;
+        public double initialMean;
+        public double finalMean;
+        public double stdDev;
+    }
 
-    class DoseFindingContinuous
+    struct multiPopulationDose
+    {
+        public uint doseID;
+        public uint populationSize;
+        public double initialMeanMean;
+        public double initialMeanStdDev;
+        public double finalMeanMean;
+        public double finalMeanStdDev;
+        public double stdDevMean;
+        public double stdDevShapeFactor;
+    }
+
+    class DoseFindingContinuous : BaseModule
     {
         #region Fields
 
@@ -29,6 +41,17 @@ namespace PatientResponseSimulator.Modules
         /// private field to store the list of doses being simulated.
         /// </summary>
         private List<dose> dosesToSimulate;
+
+        /// <summary>
+        /// private field to store the list of doses to be dstributed
+        /// over the various populations. 
+        /// </summary>
+        private List<multiPopulationDose> dosesToDistributeByPopulation;
+
+        /// <summary>
+        /// Private field to keep track of multi population doses.
+        /// </summary>
+        private uint numMultiPopulationDoses;
 
         /// <summary>
         /// field to store the number of visits that will occur
@@ -60,17 +83,27 @@ namespace PatientResponseSimulator.Modules
         /// </summary>
         private string outputDirectory;
 
-        #endregion 
+        /// <summary>
+        /// private uint used to store the amount of populations
+        /// that will be simulated if we are doing multiple populations.
+        /// </summary>
+        private uint populationsToSimulate;
+
+        #endregion
 
         #region Constructors
 
         public DoseFindingContinuous()
         {
             numDoses = 0;
+            numMultiPopulationDoses = 0;
 
             dosesToSimulate = new List<dose>();
+            dosesToDistributeByPopulation = new List<multiPopulationDose>();
 
             numVisits = 0;
+
+            populationsToSimulate = 0;
 
             doseFindingEndpoint = new EndPoint();
 
@@ -78,16 +111,33 @@ namespace PatientResponseSimulator.Modules
             doseFindingEndpoint.Type = EndpointType.Continous;
             doseFindingEndpoint.VisitOccurances = new List<int>();
 
-            baselineMean = 10;
-
+            // default non-zero values JIC.
+            // Should not be able to turn on baseline
+            // without setting these. 
+            baselineMean = 10;  
             baselineStdDev = 1;
 
+            // by default
             baseline = false;
+
+            // Set default directory
+            outputDirectory = "C:\\Tessella\\";
         }
 
         #endregion
 
         #region Methods
+
+        public static void SelfRegister()
+        {
+            name = "DoseFindingContinuous";
+            description = "Module for Continuous Dose Finding";
+            ModuleData dt = new ModuleData();
+            dt.moduleName = name;
+            dt.moduleDescription = description;
+            dt.ModuleClass = getType<DoseFindingContinuous>();
+            ModuleRegister.InsertModule(dt);
+        }
 
         /// <summary>
         /// Produces the data for a single population, and outputs the data
@@ -125,7 +175,7 @@ namespace PatientResponseSimulator.Modules
                 foreach (dose d in dosesToSimulate)
                 {
                     // Linear interpolation of the mean based on the visit.
-                    visitMean = (d.finalMean-d.initialMean)/(numVisits-1)*i + d.initialMean;
+                    visitMean = (d.finalMean - d.initialMean) / (numVisits - 1) * i + d.initialMean;
                     SubjectManager.SimulateVisit(d.doseID, d.populationSize, visitMean, d.stdDev, StatisticType.Normal, doseFindingEndpoint);
                 }
 
@@ -236,7 +286,55 @@ namespace PatientResponseSimulator.Modules
         {
             baseline = false;
         }
- 
+
+        /// <summary>
+        /// Adds a new multi population dose to the list of doses to be tested.
+        /// </summary>
+        /// <param name="dosePopulationSize">
+        /// Size of the dose population
+        /// </param>
+        /// <param name="doseInitialMean">
+        /// Initial mean of the data
+        /// </param>
+        /// <param name="doseFinalMean">
+        /// Final mean of the data
+        /// </param>
+        /// <param name="doseStandardDeviation">
+        /// Standard deviation of the data
+        /// </param>
+        public void AddMultiPopulationDose(uint dosePopulationSize, double doseInitialMean, double doseFinalMean, double doseStandardDeviation)
+        {
+            // Incrament the dose count (also ID number)
+            numMultiPopulationDoses += 1;
+
+            multiPopulationDose doseToInput = new multiPopulationDose();
+
+            doseToInput.doseID = numDoses;
+            doseToInput.populationSize = dosePopulationSize;
+           doseToInput.initialMean = doseInitialMean;
+           doseToInput.finalMean = doseFinalMean;
+            doseToInput.stdDev = doseStandardDeviation;
+
+            // Add the new dose to the dose List.
+          dosesToSimulate.Add(doseToInput);
+        }
+
+        /// <summary>
+        /// clears the list of multi population doses that will be siumulated
+        /// and sets the numer of doses to 0. Fresh start. Also clears regular
+        /// doses.
+        /// </summary>
+        public void RemoveAllMultiPopulationDoses()
+        {
+
+            numMultiPopulationDoses = 0;
+            dosesToDistributeByPopulation.Clear();
+
+            RemoveAllDoses();
+        }
+
+
+
         #endregion
     }
 }

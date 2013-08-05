@@ -49,7 +49,7 @@ namespace PatientResponseSimulator
             List<double> values = new List<double>();
 
             SM.SetSampleSize(10000);
-            values = SM.InverseGammaDistribution(1, 1);
+            values = SM.InverseGammaDistribution(0.5, 3);
 
             try
             {
